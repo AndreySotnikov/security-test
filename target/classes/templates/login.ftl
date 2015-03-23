@@ -10,12 +10,9 @@
 <#--<div th:if="${param.logout}">-->
     <#--You have been logged out.-->
 <#--</div>-->
-<p>
-    HELLO
-</p>
-<form method="post" action="/aa/loginuser">
-    <div><label> User Name 2: <input type="text" name="username"/> </label></div>
-    <div><label> Password 2: <input type="password" name="password"/> </label></div>
+<form id="loginForm" method="post" action="/aa/loginuser">
+    <div><label> User Name: <input type="text" name="username"/>  </label></div>
+    <div><label> Password: <input type="password" name="password" id="pass"/> </label></div>
     <div><input type="submit" value="Sign In"/></div>
 </form>
 </body>
