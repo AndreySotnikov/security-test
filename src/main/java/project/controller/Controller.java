@@ -5,9 +5,17 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import project.entity.Account;
-import project.service.AccountService;
+import project.entity.User_roles;
+import project.entity.Users;
+import project.service.EncryptPassword;
 import project.service.LoginDatabase;
+import project.service.UsersService;
+import project.service.Users_rolesService;
+
+import javax.jws.soap.SOAPBinding;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+
 
 /**
  * Created by andrey on 23.03.15.
@@ -15,11 +23,17 @@ import project.service.LoginDatabase;
 @org.springframework.stereotype.Controller
 @RequestMapping("/aa")
 public class Controller {
-//    @Autowired
-//    AccountService accountService;
+    @Autowired
+    UsersService usersService;
+
+    @Autowired
+    Users_rolesService users_rolesService;
 
     @Autowired
     LoginDatabase loginDatabase;
+
+    @Autowired
+    EncryptPassword encryptPassword;
 
     @RequestMapping(value = "/loginuser", method = RequestMethod.GET)
     public String login2(){
@@ -63,11 +77,16 @@ public class Controller {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@RequestParam("username") String username, @RequestParam("password") String password){
-        //accountService.add(new Account(username,password));
-        loginDatabase.connect();
-        loginDatabase.insertData(username,password);
-        loginDatabase.closeDB();
+    public String register(@RequestParam("username") String username, @RequestParam("password") String password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+
+        Users user = new Users(username,encryptPassword.encrypt(password),1);
+        usersService.add(user);
+        users_rolesService.add(new User_roles("ROLE_USER",user));
+//
+//        loginDatabase.connect();
+//        password = encryptPassword.encrypt(password);
+//        loginDatabase.insertData(username,password);
+//        loginDatabase.closeDB();
         return "home";
     }
 }
