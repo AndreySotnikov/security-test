@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import project.service.EncryptPassword;
 
 import javax.sql.DataSource;
@@ -35,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                    .loginPage("/aa/loginuser").defaultSuccessUrl("/aa/home",false).failureUrl("/aa/fail")
+                    .loginPage("/aa/loginuser").defaultSuccessUrl("/aa/transfer",false).failureUrl("/aa/fail")
                 .permitAll()
                 .and()
                     .logout()
@@ -69,6 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "select username,password, enabled from users where username=?")
                 .authoritiesByUsernameQuery(
                         "select username, role from user_roles where username=?");
+
 
 //        auth
 //                .inMemoryAuthentication()

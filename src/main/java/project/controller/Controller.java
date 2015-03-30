@@ -1,7 +1,9 @@
 package project.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.repository.query.Param;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,14 +17,19 @@ import project.service.Users_rolesService;
 import javax.jws.soap.SOAPBinding;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
 
 
 /**
  * Created by andrey on 23.03.15.
  */
+
 @org.springframework.stereotype.Controller
 @RequestMapping("/aa")
+@Scope("session")
 public class Controller {
+    String user;
+
     @Autowired
     UsersService usersService;
 
@@ -40,25 +47,27 @@ public class Controller {
         return "login";
     }
 
-//    @RequestMapping(value = "/loginuser", method = RequestMethod.POST)
-//    public void login(@RequestParam("username") String username,@RequestParam("password") String password){
-//        System.err.println(username);
-//        System.err.println(password);
-//    }
-
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public String test(){
-        return "user";
+    @RequestMapping(value = "/transfer", method = RequestMethod.GET)
+    public String trans(Principal principal){
+        user = principal.getName();
+        return "redirect:/aa/home";
     }
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
-    public String login3() {
+    public String login3(ModelMap modelMap) {
+        if (user != null)
+            modelMap.addAttribute("user",user);
         return "home";
     }
 
     @RequestMapping(value = "/fail", method = RequestMethod.GET)
     public String login4() {
         return "fail";
+    }
+
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    public String test(){
+        return "user";
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -84,7 +93,7 @@ public class Controller {
         users_rolesService.add(new User_roles("ROLE_USER",user));
 //
 //        loginDatabase.connect();
-//        password = encryptPassword.encrypt(password);
+//       password = encryptPassword.encrypt(password);
 //        loginDatabase.insertData(username,password);
 //        loginDatabase.closeDB();
         return "home";
